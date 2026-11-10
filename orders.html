@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Kar Mukil Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Kar Mukil</h3>
+                <p class="text-muted small">Retail Shop</p>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a href="dashboard.html"><i class="fas fa-home me-2"></i> Dashboard & Order</a></li>
+                <li class="active"><a href="orders.html"><i class="fas fa-list me-2"></i> My Orders</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <span class="navbar-brand fw-bold text-primary">Order History & Tracking</span>
+                </div>
+            </nav>
+
+            <div class="card p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="shopOrdersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Total (₹)</th>
+                                <th>Order Status</th>
+                                <th>Delivery Status</th>
+                                <th>Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-primary">Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4" id="invoiceBody">
+                    <!-- Loaded dynamically -->
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printInvoice()"><i class="fas fa-print"></i> Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/shop.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth('shop_owner');
+            loadMyOrders();
+        });
+    </script>
+</body>
+</html>

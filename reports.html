@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Kar Mukil Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Kar Mukil</h3>
+                <p class="text-muted small">Admin Panel</p>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a href="dashboard.html"><i class="fas fa-home me-2"></i> Dashboard</a></li>
+                <li><a href="products.html"><i class="fas fa-box me-2"></i> Products</a></li>
+                <li><a href="inventory.html"><i class="fas fa-warehouse me-2"></i> Inventory</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-cart me-2"></i> Orders</a></li>
+                <li class="active"><a href="reports.html"><i class="fas fa-chart-pie me-2"></i> Reports</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <span class="navbar-brand fw-bold text-primary">Analytics & Reports</span>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4 shadow-sm border-0 h-100">
+                        <h5 class="fw-bold mb-3 text-primary">Daily Sales Overview</h5>
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-hover" id="salesReportTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Orders</th>
+                                        <th class="text-end">Total Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4 shadow-sm border-0 h-100">
+                        <h5 class="fw-bold mb-3 text-primary">Order Status Distribution</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="ordersReportTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Status</th>
+                                        <th class="text-end">Order Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkAuth('admin');
+            
+            try {
+                const sales = await fetchAPI('/reports/sales');
+                document.querySelector('#salesReportTable tbody').innerHTML = sales.map(s => `
+                    <tr>
+                        <td>${new Date(s.date).toLocaleDateString()}</td>
+                        <td>${s.total_orders}</td>
+                        <td class="fw-bold text-success text-end">₹${s.total_sales}</td>
+                    </tr>
+                `).join('');
+
+                const orders = await fetchAPI('/reports/orders');
+                document.querySelector('#ordersReportTable tbody').innerHTML = orders.map(o => `
+                    <tr>
+                        <td>${getStatusBadge(o.order_status)}</td>
+                        <td class="fw-bold text-end">${o.count}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
